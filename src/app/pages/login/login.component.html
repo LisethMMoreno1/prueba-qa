@@ -1,0 +1,25 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <input type="email" formControlName="email" placeholder="Email" />
+  <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+    Email inválido
+  </div>
+
+  <input type="password" formControlName="password" placeholder="Contraseña" />
+ <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+  <div *ngIf="loginForm.get('password')?.errors?.['required']">
+    La contraseña es obligatoria.
+  </div>
+  <div *ngIf="loginForm.get('password')?.errors?.['minlength']">
+    La contraseña debe tener al menos 6 caracteres.
+  </div>
+  <div *ngIf="loginForm.get('password')?.errors?.['pattern']">
+    La contraseña solo puede contener letras y números (sin símbolos ni espacios).
+  </div>
+</div>
+
+
+  <button type="submit" [disabled]="!loginForm.valid">Ingresar</button>
+
+
+  <p *ngIf="loginError">Credenciales incorrectas</p>
+</form>
