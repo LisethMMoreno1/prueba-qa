@@ -12,20 +12,20 @@ describe('ProfileComponent', () => {
 
   beforeEach(async () => {
     mockAuthService = {
-      getCurrentUser: jasmine.createSpy(),
-      logout: jasmine.createSpy()
+      getCurrentUser: jasmine.createSpy('getCurrentUser'),
+      logout: jasmine.createSpy('logout'),
     };
 
     mockRouter = {
-      navigate: jasmine.createSpy()
+      navigate: jasmine.createSpy('navigate'),
     };
 
     await TestBed.configureTestingModule({
       imports: [CommonModule, ProfileComponent],
       providers: [
         { provide: AuthService, useValue: mockAuthService },
-        { provide: Router, useValue: mockRouter }
-      ]
+        { provide: Router, useValue: mockRouter },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProfileComponent);

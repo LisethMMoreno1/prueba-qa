@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
@@ -13,20 +13,24 @@ describe('LoginComponent', () => {
 
   beforeEach(async () => {
     mockAuthService = {
-      login: jasmine.createSpy()
+      login: jasmine.createSpy('login'),
     };
 
     mockRouter = {
-      navigate: jasmine.createSpy()
+      navigate: jasmine.createSpy('navigate'),
     };
 
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, LoginComponent],
+      imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        LoginComponent
+      ],
       providers: [
         FormBuilder,
         { provide: AuthService, useValue: mockAuthService },
-        { provide: Router, useValue: mockRouter }
-      ]
+        { provide: Router, useValue: mockRouter },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
@@ -39,50 +43,54 @@ describe('LoginComponent', () => {
   });
 
   it('debería tener el formulario inválido cuando está vacío', () => {
-    expect(component.loginForm.valid).toBeFalse();
+    expect(component.loginForm.valid).toBeFalsy();
   });
 
   it('debería validar correctamente el formulario con valores válidos', () => {
     component.loginForm.setValue({
-      email: 'usuario@ejemplo.com',
-      password: 'abc123'
+      email: 'usuario@prueba.com',
+      password: 'abc123',
     });
-    expect(component.loginForm.valid).toBeTrue();
+    fixture.detectChanges();
+    expect(component.loginForm.valid).toBeTruthy();
   });
 
   it('no debería enviar el formulario si es inválido', () => {
     component.loginForm.setValue({
       email: '',
-      password: ''
+      password: '',
     });
+    fixture.detectChanges();
     component.onSubmit();
     expect(mockAuthService.login).not.toHaveBeenCalled();
   });
 
   it('debería llamar a login y navegar al perfil si las credenciales son correctas', () => {
     component.loginForm.setValue({
-      email: 'usuario@ejemplo.com',
-      password: 'abc123'
+      email: 'usuario@prueba.com',
+      password: 'abc123',
     });
+    fixture.detectChanges();
     mockAuthService.login.and.returnValue(true);
 
     component.onSubmit();
 
-    expect(mockAuthService.login).toHaveBeenCalledWith('usuario@ejemplo.com', 'abc123');
+    expect(mockAuthService.login).toHaveBeenCalledWith('usuario@prueba.com', 'abc123');
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/profile']);
-    expect(component.loginError).toBeFalse();
+    expect(component.loginError).toBeFalsy();
   });
 
   it('debería mostrar error si las credenciales son incorrectas', () => {
     component.loginForm.setValue({
-      email: 'usuario@ejemplo.com',
-      password: 'incorrecta'
+      email: 'usuario@prueba.com',
+      password: 'incorrecta',
     });
+    fixture.detectChanges();
     mockAuthService.login.and.returnValue(false);
 
     component.onSubmit();
 
-    expect(component.loginError).toBeTrue();
+    expect(component.loginError).toBeTruthy();
     expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 });

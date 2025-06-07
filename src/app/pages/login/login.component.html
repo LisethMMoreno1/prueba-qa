@@ -1,8 +1,19 @@
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <input type="email" formControlName="email" placeholder="Email" />
-  <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-    Email inválido
+<input
+  type="email"
+  formControlName="email"
+  placeholder="Email"
+/>
+
+<div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+  <div *ngIf="loginForm.get('email')?.errors?.['required']">
+    El correo es obligatorio.
   </div>
+  <div *ngIf="loginForm.get('email')?.errors?.['email']">
+    El formato del correo no es válido.
+  </div>
+</div>
+
 
   <input type="password" formControlName="password" placeholder="Contraseña" />
  <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
